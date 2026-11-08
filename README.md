@@ -10,9 +10,11 @@ Built for web frontends: HTML, React, Next.js, Tailwind. Includes defaults for I
 
 - **Three modes:** audit (report only), fix (edit existing UI), generate (build new UI with the same rules).
 - **Scope lock:** change only the chosen area, inherit the page's existing tokens first, check the seam with neighbouring sections afterwards.
+- **Section plan:** each section gets its own layout and its own animation library, so one project can mix GSAP, Motion, OGL, Lottie and plain CSS safely. Colour, fonts and the icon set stay global, with scoped section themes for variety.
 - **Nine ordered passes:** copy, spacing, colour, type, icons, layout, components, one visual moment, motion.
-- **Scripts that find slop without judgment:** a source scanner, a rendered-page audit (contrast, tap targets, fonts, focus rings, looping animation, screenshots at 375, 768 and 1440 px) and an OKLCH colour ramp generator.
-- **Reference rules** for colour (including colour psychology), fonts and licensing, animation libraries, performance and accessibility gates, and config-driven structure.
+- **Scripts that find slop without judgment:** a source scanner (including theme-costume patterns and two animation libraries in one file), a rendered-page audit (contrast, tap targets, fonts, focus rings, looping animation, screenshots at 375, 768 and 1440 px) and an OKLCH colour ramp generator.
+- **Reference rules** for colour (including colour psychology), fonts and licensing, animation libraries and component recipes, a layout component catalog, performance and accessibility gates, and config-driven structure.
+- **Theme discipline:** a terminal, security or retro flavour lives in one layer. No SNAKE_CASE labels, `//` prefixes, all-monospace pages, blinking cursors or self-assigned status badges.
 - **Hard rules:** never invent testimonials, logos, metrics or prices; always handle reduced motion; keep content in config.
 
 ## Install
@@ -68,10 +70,15 @@ references/
   tokens.md              spacing, radius, type scale, neutral ramps, easing, breakpoints
   colour.md              colour system, states, themes, charts, accessibility, colour psychology
   fonts.md               choosing fonts, Indic coverage, loading, licensing
-  motion.md              animation libraries by tier, performance, reduced motion
+  motion.md              animation libraries by tier, mixing them by section, performance, reduced motion, recipes
+  section-plan.md        per-section layout, motion library, scoped theme and icons; what may vary
+  layouts.md             layout components: master-detail, split, case studies, timeline and more
+  icons.md               icon set choice, allowed extras, sizing, accessibility
   quality.md             performance budget, accessibility, responsive, discoverability
   india.md               Indian-market defaults
   areas/                 dashboard, hero, skills-proof, pricing-proof
+examples/
+  security-section.html  a security portfolio section rebuilt with these rules
 scripts/
   slop-scan.mjs          static scan
   audit-dom.mjs          rendered audit and screenshots
@@ -80,7 +87,7 @@ scripts/
 
 ## Status
 
-Early draft. The three scripts were tested on small sample files (one deliberately sloppy, one clean). The skill itself has not yet been run against a range of real projects, so expect rules to change as it meets real pages. Font names, library licences and Indic font coverage were written from general knowledge and should be checked before you rely on them for client work.
+Early draft. The three scripts were tested on small sample files (one deliberately sloppy, one clean, one copied from a real over-themed security section). One example section was rebuilt with the rules and passes both scanners. The skill itself has not yet been run against a range of real projects, so expect rules to change as it meets real pages. Font names, library licences and Indic font coverage were written from general knowledge and should be checked before you rely on them for client work.
 
 ## Contributing
 

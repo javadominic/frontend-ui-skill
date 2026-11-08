@@ -2,7 +2,7 @@
 
 How to build a colour system that is accessible, has few moving parts, and belongs to the product. Exact neutral ramps and role mapping are in `tokens.md`. This file covers the thinking.
 
-Contents: System shape · Harmony as a check · Semantic colours · States · Light and dark · Charts · Accessibility · Colour psychology · Cultural context · Validation
+Contents: System shape · Harmony as a check · Semantic colours · States · Section themes · Light and dark · Charts · Accessibility · Colour psychology · Cultural context · Validation
 
 ## System shape
 
@@ -51,6 +51,10 @@ Define every state once and reuse it.
 | Disabled | Lower contrast text and no hover. Still readable, 3:1 minimum for the label if it must be understood. |
 | Loading | Skeleton in two neutral steps, no shimmer loop on large areas |
 | Error / success | Semantic colour plus message |
+
+## Section themes
+
+Different sections may carry a scoped theme (a dark band on a light page, category colours in a dashboard) using CSS variables, as set out in `section-plan.md`. The neutral ramp family and the accent hue stay the same project-wide. The accent moves along its own ramp for contrast, and every themed section is re-checked for contrast. A new accent hue per section is the quickest way to make a page look pasted together.
 
 ## Light and dark
 

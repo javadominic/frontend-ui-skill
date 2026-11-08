@@ -134,6 +134,29 @@ const RULES = [
   { id: 'center-everything', sev: 'low', area: 'layout',
     re: /\btext-center\b[^"'`]*\bmx-auto\b[^"'`]*\bmax-w-/, msg: 'Centered stacked block. Fine for a short hero, a template default for anything else.' },
 
+  // theme costume
+  { id: 'snake-label', sev: 'high', area: 'copy',
+    re: />\s*[A-Z][A-Z0-9]+(?:_[A-Z0-9&]+)+(?:\s[^<>{}\n]*)?</,
+    msg: 'SNAKE_CASE label in the interface. Use plain sentence-case words.' },
+  { id: 'snake-title', sev: 'high', area: 'copy',
+    re: />\s*[\/>$#]?\s*[A-Z][a-z]+(?:_[A-Z][a-z]+)+\b[^<>{}\n]*</,
+    msg: 'Title_Case_With_Underscores heading. Use the plain words a visitor would search for.' },
+  { id: 'slash-prefix', sev: 'high', area: 'copy',
+    re: />\s*\/\/\s*[A-Za-z\[]|>[^<>{}]*\s\/\/\s[A-Z_][^<>{}]*</,
+    msg: '"//" used as a label separator or prefix. Remove, or keep one prompt glyph as the signature.' },
+  { id: 'bracket-tag', sev: 'medium', area: 'copy',
+    re: />\s*\[[A-Z][A-Z0-9_ ]{2,}\]\s/,
+    msg: '[TAG] prefix on ordinary text.' },
+  { id: 'mono-everywhere', sev: 'medium', area: 'type',
+    re: /<(?:html|body|main)\b[^>]*\bfont-mono\b|(?:^|[\s,}])(?:html|body)\s*\{[^}]*font-family\s*:[^;}]*(?:monospace|\bmono\b|Courier|Consolas|Menlo)/i,
+    msg: 'Monospace on the whole page. Use sans for reading text, mono for data only.' },
+  { id: 'blink-cursor', sev: 'medium', area: 'motion',
+    re: /@keyframes\s+(?:blink|caret|cursor|typing)|animate-\[?blink|\bcaret-blink\b|animation[^;]*\b(?:blink|typing)\b/i,
+    msg: 'Blinking cursor or typing effect. Remove, or one static glyph as the signature.' },
+  { id: 'self-badge', sev: 'medium', area: 'copy',
+    re: />\s*(?:VERIFIED|ACTIVE|AUTHENTICATED|LAB[_ ]VERIFIED|CLICK[_ ]TO[_ ][A-Z]+|STATUS:|ZERO [A-Z ]+)[^<]*</,
+    msg: 'Self-assigned status badge. Show evidence instead, or keep one label for a real distinction.' },
+
   // a11y / quality (static part)
   { id: 'outline-none', sev: 'high', area: 'quality',
     re: /\boutline-none\b(?![^"'`]*\bfocus(?:-visible)?:)|outline\s*:\s*(?:none|0)\b(?![^}]*:focus)/,
@@ -185,6 +208,22 @@ for (const file of files) {
     // only flag when there is real animation, not a single colour transition
     const real = /\b(?:gsap|ScrollTrigger|framer-motion|from\s+['"]motion|@keyframes|animate-(?:pulse|ping|bounce|spin)|animation\s*:)/.test(text);
     if (real) findings.push({ file, line: 1, id: r.id, sev: r.sev, area: r.area, msg: r.msg, text: '(file-level)' });
+  }
+}
+
+// Two animation libraries in the same file usually means two animators on the same elements.
+// Mixing libraries across sections is fine; inside one component, check they never touch the same element.
+for (const file of files) {
+  if (!/\.(?:jsx?|tsx?|vue|svelte|astro|html)$/.test(file)) continue;
+  const text = readFileSync(file, 'utf8');
+  const libs = [];
+  if (/from\s+['"]gsap|gsap\.(?:to|from|timeline|set)\b|cdnjs[^'"]*gsap/.test(text)) libs.push('GSAP');
+  if (/from\s+['"](?:motion|motion\/react|framer-motion)['"]/.test(text)) libs.push('Motion');
+  if (/from\s+['"]animejs?['"]|anime\(/.test(text)) libs.push('Anime.js');
+  if (/from\s+['"]@react-spring/.test(text)) libs.push('React Spring');
+  if (libs.length > 1) {
+    findings.push({ file, line: 1, id: 'multi-animator', sev: 'medium', area: 'motion',
+      msg: `Two animation libraries in one file (${libs.join(', ')}). Fine across sections; inside one component make sure they never animate the same element.`, text: '(file-level)' });
   }
 }
 

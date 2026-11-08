@@ -58,6 +58,21 @@ The moment is one project shown beautifully: a high-quality screenshot or a shor
 - No "passionate", "crafting digital experiences", "innovative solutions". If the sentence could appear on any developer's page, rewrite it with a fact only this person has.
 - For an agency: speak in outcomes for named kinds of clients ("billing pages for small shops") rather than generic service lists.
 
+## Technical and security portfolios
+
+Security, networking, hardware and developer-tool sections are the most likely to arrive wearing a costume: terminal green, SNAKE_CASE labels, `//` prefixes, everything monospace, status badges. The costume says "hacker" and proves nothing. Keep the feel in one place and put the proof everywhere else.
+
+- **Plain section names.** "Security work", "Projects", "Tools". Not "Security_Protocols" or "Discipline Dossier".
+- **Mono for data only:** tool names, commands, payloads, ports, file paths, figures. Headings and paragraphs are sans.
+- **One accent**, used for the selected item, one status dot and the links. Chrome stays neutral.
+- **One theme signature at most:** a static prompt glyph by the logo, a thin cursor-style underline on the active item, or real command output as the featured visual. Not all of them.
+- **The proof is the bright element:** a real tool screenshot or terminal capture, a redacted report, a CVE or write-up link, a repository. No made-up output.
+- **Honest distinctions.** If some work was on production systems and some in a lab, say it once per item in plain words ("Production", "Lab"). Do not stack VERIFIED, ACTIVE and AUTHENTICATED badges.
+- **Claims need evidence next to them.** "80+ payload injections" is fine beside the tool and a link or screenshot. "Zero synthetic metrics" with nothing shown is a slogan.
+- **Ethics line.** A short, plain statement about authorised testing only, once, in the footer or the relevant item.
+- **Layout.** Master-detail (`references/layouts.md`) with a sliding marker and a panel that changes with a short fade and rise (`references/motion.md`, component recipes).
+- **Gaps stay visible.** If an item has no scope, tools or evidence yet, say so in plain words and list it in the report. Do not fill it with invented detail.
+
 ## Checks for this area
 
 - No percentage bars, gauges or star ratings.
@@ -65,3 +80,4 @@ The moment is one project shown beautifully: a high-quality screenshot or a shor
 - Each project has a real screenshot, a role, a stack, and a link or a clear reason there is none.
 - Every number and name in the section can be defended. Unverified ones are removed or marked and listed in the report.
 - The section passes the template test: swap the person's name and projects and it no longer fits.
+- No SNAKE_CASE, `//` prefixes or all-mono text. Mono appears only on tool names, commands and figures.

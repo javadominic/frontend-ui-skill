@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Security work</title>
+<style>
+  /* Tokens: ink neutral ramp + one green accent (hue 150), generated with scripts/ramp.mjs */
+  :root {
+    --bg: #060a10;            /* ink-950 */
+    --surface: #13181e;       /* ink-900 */
+    --surface-hover: #22272e; /* ink-800 */
+    --border: rgba(247, 250, 255, 0.08);
+    --border-strong: rgba(247, 250, 255, 0.16);
+    --text: #f7faff;          /* ink-50 */
+    --text-2: #9ba2ab;        /* ink-400, 8:1 on bg */
+    --accent: #3bbe65;        /* accent-400, 8.7:1 on bg */
+    --focus: #3bbe65;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --dur-1: 120ms; --dur-2: 200ms; --dur-3: 320ms;
+    --sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 24px; }
+
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 96px 24px; }
+  .head { margin-bottom: 64px; max-width: 640px; }
+  h2 { margin: 0 0 16px; font-size: 40px; line-height: 44px; font-weight: 500; letter-spacing: -0.02em; }
+  .lead { margin: 0; color: var(--text-2); font-size: 18px; line-height: 28px; }
+
+  .md { display: grid; gap: 48px; grid-template-columns: minmax(280px, 380px) minmax(0, 1fr); align-items: start; }
+
+  /* list */
+  .list { position: relative; display: grid; grid-auto-rows: 1fr; gap: 2px; padding-left: 0; } /* equal rows, so the marker only needs to move, never resize */
+  .marker { position: absolute; left: 0; top: 0; width: 2px; height: 0; background: var(--accent); border-radius: 2px;
+            transition: transform var(--dur-3) var(--ease); }
+  .tab { appearance: none; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer;
+         display: grid; gap: 4px; padding: 12px 16px; border-radius: 10px; transition: background-color var(--dur-1) var(--ease); }
+  .tab:hover { background: var(--surface); }
+  .tab[aria-selected="true"] { background: var(--surface-hover); }
+  .tab-title { font-weight: 500; }
+  .tab-meta { font-size: 13px; line-height: 20px; color: var(--text-2); }
+  .tab:focus-visible, .link:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  /* detail */
+  .panel { min-width: 0; padding-top: 12px; }
+  .panel h3 { margin: 0 0 8px; font-size: 32px; line-height: 40px; font-weight: 500; letter-spacing: -0.01em; }
+  .category { margin: 0 0 32px; color: var(--text-2); }
+  .block { padding: 24px 0; border-top: 1px solid var(--border); }
+  .label { margin: 0 0 8px; font-size: 13px; line-height: 20px; color: var(--text-2); }
+  .block p.body { margin: 0; max-width: 640px; }
+  .tools { display: flex; flex-wrap: wrap; gap: 8px 24px; margin: 0; padding: 0; list-style: none; font-family: var(--mono); font-size: 14px; line-height: 24px; }
+  .evidence { display: grid; gap: 24px; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; }
+  .evidence h4 { margin: 0 0 8px; font-size: 20px; line-height: 28px; font-weight: 500; }
+  .evidence p { margin: 0 0 16px; color: var(--text-2); }
+  .link { display: inline-flex; align-items: center; gap: 8px; color: var(--accent); text-decoration: none; font-weight: 500; min-height: 44px; }
+  .link:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .link svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .shot { aspect-ratio: 16 / 9; border: 1px dashed var(--border-strong); border-radius: 12px; display: grid; place-items: center; padding: 24px; text-align: center; color: var(--text-2); font-size: 14px; line-height: 20px; }
+  .empty { color: var(--text-2); margin: 0; padding: 24px 0; border-top: 1px solid var(--border); }
+
+  /* motion: one entrance, small and quick */
+  .head { animation: enter var(--dur-3) var(--ease) both; }
+  @keyframes enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+  @media (max-width: 1023px) {
+    .wrap { padding: 64px 24px; }
+    .md { grid-template-columns: 1fr; gap: 32px; }
+  }
+  @media (max-width: 767px) {
+    .wrap { padding: 48px 16px; }
+    h2 { font-size: 32px; line-height: 36px; }
+    .panel h3 { font-size: 24px; line-height: 32px; }
+    .evidence { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .head { animation: none; }
+    .marker, .tab { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="head">
+    <h2>Security work</h2>
+    <p class="lead">Four areas I work in, from application testing on production code to research in a lab.</p>
+  </header>
+
+  <div class="md">
+    <div class="list" role="tablist" aria-label="Security areas" aria-orientation="vertical" id="list">
+      <span class="marker" id="marker" aria-hidden="true"></span>
+    </div>
+    <div class="panel" role="tabpanel" id="panel" tabindex="0" aria-live="polite"></div>
+  </div>
+</main>
+
+<script>
+  // Content lives in one config object, so editing copy never touches the markup below.
+  const areas = [
+    {
+      id: "appsec", title: "Application pentesting and vulnerability assessment", where: "Production",
+      category: "Offensive and defensive diagnostics",
+      scope: "Live HTTP request tampering, security header validation and payload injection benchmarking.",
+      tools: ["Burp Suite", "Kali Linux", "Nmap", "Wireshark", "Custom payloads"],
+      evidence: { name: "ARVIQ Security Browser", text: "Desktop pentest utility with 80+ payload injections.", link: "#", linkText: "View project" }
+    },
+    { id: "packets", title: "Low-level packet analysis and socket inspection", where: "Production" },
+    { id: "phishing", title: "Phishing simulation and social engineering defense", where: "Lab" },
+    { id: "host", title: "Host forensics and keystroke telemetry research", where: "Lab" }
+  ];
+
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const list = document.getElementById("list");
+  const marker = document.getElementById("marker");
+  const panel = document.getElementById("panel");
+  const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg>';
+  const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  // build the list
+  const tabs = areas.map((a, i) => {
+    const b = document.createElement("button");
+    b.className = "tab"; b.type = "button"; b.id = "tab-" + a.id;
+    b.setAttribute("role", "tab"); b.setAttribute("aria-controls", "panel");
+    b.innerHTML = '<span class="tab-title">' + esc(a.title) + '</span><span class="tab-meta">' + esc(a.where) + "</span>";
+    b.addEventListener("click", () => select(i, true));
+    b.addEventListener("keydown", (e) => {
+      const next = e.key === "ArrowDown" ? i + 1 : e.key === "ArrowUp" ? i - 1 : e.key === "Home" ? 0 : e.key === "End" ? areas.length - 1 : null;
+      if (next === null) return;
+      e.preventDefault();
+      select((next + areas.length) % areas.length, true);
+      tabs[(next + areas.length) % areas.length].focus();
+    });
+    list.appendChild(b);
+    return b;
+  });
+
+  function render(a) {
+    let html = "<h3>" + esc(a.title) + "</h3>";
+    if (!a.scope) {
+      return html + '<p class="empty">Scope, tools and evidence for this area have not been added yet.</p>';
+    }
+    html += '<p class="category">' + esc(a.category) + "</p>";
+    html += '<div class="block"><p class="label">Scope</p><p class="body">' + esc(a.scope) + "</p></div>";
+    html += '<div class="block"><p class="label">Tools</p><ul class="tools">' + a.tools.map((t) => "<li>" + esc(t) + "</li>").join("") + "</ul></div>";
+    html += '<div class="block"><p class="label">Evidence</p><div class="evidence"><div>' +
+      "<h4>" + esc(a.evidence.name) + "</h4><p>" + esc(a.evidence.text) + '</p><a class="link" href="' + a.evidence.link + '">' + esc(a.evidence.linkText) + arrow + "</a></div>" +
+      '<div class="shot">Add a screenshot of ' + esc(a.evidence.name) + " here</div></div></div>";
+    return html;
+  }
+
+  function moveMarker(i) {
+    const t = tabs[i];
+    marker.style.height = t.offsetHeight + "px";
+    marker.style.transform = "translateY(" + t.offsetTop + "px)";
+  }
+
+  let current = -1;
+  function select(i, animate) {
+    if (i === current) return;
+    current = i;
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", String(k === i)); t.tabIndex = k === i ? 0 : -1; });
+    panel.setAttribute("aria-labelledby", tabs[i].id);
+    panel.innerHTML = render(areas[i]);
+    moveMarker(i);
+    if (animate && !reduce.matches) {
+      panel.animate([{ opacity: 0, transform: "translateY(12px)" }, { opacity: 1, transform: "none" }], { duration: 320, easing: "cubic-bezier(0.22, 1, 0.36, 1)" });
+      panel.querySelectorAll(".tools li").forEach((li, k) =>
+        li.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, delay: 60 + k * 40, easing: "ease-out", fill: "backwards" }));
+    }
+  }
+
+  select(0, false);
+  window.addEventListener("resize", () => moveMarker(current));
+</script>
+</body>
+</html>

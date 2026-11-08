@@ -6,7 +6,7 @@ Use this list for the audit step. Each sign says who can detect it, because that
 - **Eyes** means a model or person has to look at a screenshot. Write the evidence ("hero and pricing use the same card") instead of a score, because scores drift between runs.
 - **Human** means only the product owner can judge it. Raise it as a question in the report, not as a finding.
 
-Contents: Colour · Surfaces · Icons and emoji · Copy · Type · Spacing · Layout · Charts and data · Motion · Quality · Whole-screen tests
+Contents: Colour · Surfaces · Icons and emoji · Copy · Type · Spacing · Layout · Charts and data · Motion · Theme costume · Quality · Whole-screen tests
 
 ## Colour
 
@@ -118,6 +118,25 @@ Contents: Colour · Surfaces · Icons and emoji · Copy · Type · Spacing · La
 | Controls under 44px on small screens | Code | 44px minimum for primary controls. |
 | Page scrolls sideways at 375px | Code | Fix the overflowing element. |
 | Text under 11px | Code | Raise it. |
+
+## Theme costume
+
+A theme (terminal, cyber, retro, brutalist, "hacker") is a costume when it covers everything. It is a signature when it lives in one place. Generated pages almost always wear the costume.
+
+| Sign | Who | Fix |
+|---|---|---|
+| SNAKE_CASE or SCREAMING labels in the UI (`PROTOCOL_01`, `CORE_PRIMITIVES_&_TOOLING`) | Code | Plain sentence-case words: "Tools", "Scope". |
+| `//` or `/` prefixes, `[TAG]` prefixes, `>` prompts on ordinary labels and headings | Code | Remove. A prompt glyph is allowed once, as the signature. |
+| Section names renamed into jargon ("Security_Protocols", "Discipline Dossier" instead of "Security work") | Eyes | Use the word a visitor would search for. |
+| Monospace for every paragraph and label | Code, Eyes | Sans for reading text. Mono only for data: tool names, commands, payloads, numbers, file paths. |
+| Blinking cursor, typing effect or scanline on titles | Code | Remove, or keep one static cursor glyph as the signature. |
+| One hue on every border, fill, label, icon and button | Eyes | Neutral chrome. The hue marks the selected item, one status dot, one key figure. |
+| Self-assigned status badges (VERIFIED, ACTIVE, AUTHENTICATED, CLICK_TO_INSPECT) | Code, Eyes | Delete. Show the evidence instead. Keep a badge only for a real distinction, once. |
+| Several badges saying the same thing in different words | Eyes | One label per distinction. |
+| Claims of verification or rigour with nothing shown ("zero synthetic metrics", "verified against production") | Human | Show a screenshot, output, repo or write-up, or remove the claim. |
+| Every item framed as a bordered tile with an icon in a bordered tile | Eyes | Use a list, a table or open rows. Boxes only where grouping needs them. |
+
+Test: remove the costume words and symbols from the screenshot. If nothing recognisable about the product is left, the costume was the whole design.
 
 ## Whole-screen tests (run these last)
 
